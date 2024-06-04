@@ -2,10 +2,10 @@
 #include "MKL46Z4.h"
 #include "lcd.h"
 
-// khoi tao mô-dun LCD
+// khoi tao mÃ´-dun LCD
 uint32_t LCD_Init(void)
 {
-    // khoi tao xung clock IRCLK cho phép hoat dong trong che do dung
+    // khoi tao xung clock IRCLK cho phÃ©p hoat dong trong che do dung
     MCG->C1  |= MCG_C1_IRCLKEN_MASK | MCG_C1_IREFSTEN_MASK;
 
     // Bat clock cac cong de cau hinh chan lcd
@@ -21,7 +21,7 @@ uint32_t LCD_Init(void)
     LCD->GCR |= LCD_GCR_PADSAFE_MASK; // Bat che do an toan de tranh xung dot khi config
     LCD->GCR &= ~LCD_GCR_LCDEN_MASK; // Tat LCD
 
-		// Cau hình các chân GPIO thành chân LCD
+		// Cau hÃ¬nh cÃ¡c chÃ¢n GPIO thÃ nh chÃ¢n LCD
 		PORTB->PCR[7] = PORT_PCR_MUX(0u);
     PORTB->PCR[8] = PORT_PCR_MUX(0u);
 		PORTB->PCR[10] = PORT_PCR_MUX(0u);
@@ -50,10 +50,10 @@ uint32_t LCD_Init(void)
 		// tan so nhay LCD
     LCD->AR = LCD_AR_BRATE(0x03); 
 
-    // Xóa loi LCD
+    // XÃ³a loi LCD
     LCD->FDCR = 0U;
 	
-		// Cau hình các chân duoc bat cho LCD
+		// Cau hÃ¬nh cÃ¡c chÃ¢n duoc bat cho LCD
     LCD->PEN[0] =	LCD_PEN_PEN(1u << 7)  |   // P7
                   LCD_PEN_PEN(1u << 8)  |   // P8
                   LCD_PEN_PEN(1u << 10) |   // P10
@@ -68,7 +68,7 @@ uint32_t LCD_Init(void)
                   LCD_PEN_PEN(1u << 20) | 	// P52
                   LCD_PEN_PEN(1u << 21);    // P53
 
-		// Cau hình các chân trên mat sau LCD
+		// Cau hÃ¬nh cÃ¡c chÃ¢n trÃªn mat sau LCD
     LCD->BPEN[0] = LCD_BPEN_BPEN(1U << 18) | LCD_BPEN_BPEN(1U << 19);
     LCD->BPEN[1] = LCD_BPEN_BPEN(1U << 20) | LCD_BPEN_BPEN(1U << 8);
 
@@ -85,11 +85,11 @@ uint32_t LCD_Init(void)
 		return 0;
 }
 
-		// Mang decoder và các hang so de hien thi trên LCD
-const volatile uint8_t ABC[16] = {0xEE,0x66,0xCC,0xEE,0x66,0xAA,0xAA,0xEE,0xEE,0xEE,0xEE,0x22,0x88,0x66,0x88,0x88}; 
-const volatile uint8_t DEFG[16] = {0xBB,0x00,0x77,0x55,0xCC,0xDD,0xFF,0x00,0xFF,0xDD,0xEE,0xFF,0xBB,0x77,0xFF,0xEE}; 
-const volatile uint8_t digit_ABC[4] = {11,38,8,17}; 
-const volatile uint8_t digit_DEFG[4] = {10,53,7,37}; 
+// Mang decoder vÃ  cÃ¡c hang so de hien thi trÃªn LCD
+const volatile uint8_t ABC[16] = {0xEE,0x66,0xCC,0xEE,0x66,0xAA,0xAA,0xEE,0xEE,0xEE,0xEE,0x22,0x88,0x66,0x88,0x88}; //macros for 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F (A-F used only to decode 10:15)
+const volatile uint8_t DEFG[16] = {0xBB,0x00,0x77,0x55,0xCC,0xDD,0xFF,0x00,0xFF,0xDD,0xEE,0xFF,0xBB,0x77,0xFF,0xEE}; //macros for 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F (A-F used only to decode 10:15)
+const volatile uint8_t digit_ABC[4] = {11,38,8,17}; //WF8B indexes to refer to set ./:, C, B, A segments in 1st, 2nd, 3rd and 4th digit
+const volatile uint8_t digit_DEFG[4] = {10,53,7,37}; //WF8B indexes to refer to set D, E, G, F segments in 1st, 2nd, 3rd and 4th digit
 
 uint8_t LCD_Print(uint8_t digit, uint8_t number) //digit 0 - less significant, digit 3 - most significant
 {
